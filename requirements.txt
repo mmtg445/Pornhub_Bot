@@ -13,7 +13,7 @@ pornhub-api==0.2.0
 pyaes==1.6.1
 pydantic==1.8.2
 pymongo==3.12.0
-python-3.12.0
+python==3.12.0
 Pyrogram==1.2.9
 pyromod==1.5
 PySocks==1.7.1
