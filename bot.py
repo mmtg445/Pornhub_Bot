@@ -1,8 +1,6 @@
 import asyncio
 import os
 from datetime import datetime
-import time
-
 import youtube_dl
 from pornhub_api import PornhubApi
 from pornhub_api.backends.aiohttp import AioHttpBackend
@@ -18,39 +16,30 @@ from helpers import download_progress_hook
 
 # বট কনফিগারেশন
 app = Client("pornhub_bot",
-            api_id=Config.API_ID,
-            api_hash=Config.API_HASH,
-            bot_token=Config.BOT_TOKEN)
+             api_id=Config.API_ID,
+             api_hash=Config.API_HASH,
+             bot_token=Config.BOT_TOKEN)
 
-# লগ চ্যানেলের আইডি
-LOG_CHANNEL_ID = "-1002420046638"
-
+# ডাউনলোড ফোল্ডার তৈরি
 if not os.path.exists("downloads"):
     os.makedirs("downloads")
 
-
-# টাইম সিঙ্ক্রোনাইজ করার জন্য একটি ফাংশন
-async def sync_time():
-    try:
-        os.system("ntpdate time.google.com")
-    except Exception as e:
-        print(f"Time Sync Error: {e}")
-
-
-btn1 = InlineKeyboardButton("Search Here", switch_inline_query_current_chat="")
-btn2 = InlineKeyboardButton("Go Inline", switch_inline_query="")
-
+LOG_CHANNEL_ID = Config.LOG_CHANNEL_ID  # লগ চ্যানেলের আইডি
 active_list = []
 
 
 async def send_log(action, details, client):
-    """Send logs to the log channel."""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_msg = f"**[{timestamp}]**\n**Action:** {action}\n**Details:** {details}"
-    await client.send_message(LOG_CHANNEL_ID, log_msg)
+    """লগ চ্যানেলে লগ পাঠানোর জন্য।"""
+    try:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_msg = f"**[{timestamp}]**\n**Action:** {action}\n**Details:** {details}"
+        await client.send_message(LOG_CHANNEL_ID, log_msg)
+    except Exception as e:
+        print(f"Log Sending Error: {e}")
 
 
 async def run_async(func, *args, **kwargs):
+    """সিঙ্ক ফাংশনকে অ্যাসিঙ্ক ফাংশনে রূপান্তর করার জন্য।"""
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(None, func, *args, **kwargs)
 
@@ -105,7 +94,7 @@ async def search(client, inline_query: InlineQuery):
             thumb_url=vid.thumb,
             reply_markup=InlineKeyboardMarkup([[
                 InlineKeyboardButton("Watch online", url=vid.url),
-                btn1
+                InlineKeyboardButton("Search Again", switch_inline_query_current_chat="")
             ]]),
         ))
 
@@ -122,7 +111,10 @@ async def start(client, message: Message):
                         "**Credits:**\n"
                         "- Created by [Rahat](https://t.me/RahatMx)\n"
                         "- Powered by [RM Movie Flix](https://t.me/RM_Movie_Flix)",
-                        reply_markup=InlineKeyboardMarkup([[btn1, btn2]]))
+                        reply_markup=InlineKeyboardMarkup([
+                            [InlineKeyboardButton("Search Here", switch_inline_query_current_chat=""),
+                             InlineKeyboardButton("Go Inline", switch_inline_query="")]
+                        ]))
     await send_log("Start Command", f"Started by @{message.from_user.username}", client)
 
 
@@ -175,3 +167,6 @@ async def download_video(client, callback: CallbackQuery):
 
     await msg.delete()
     active_list.remove(user_id)
+
+
+app.run()
