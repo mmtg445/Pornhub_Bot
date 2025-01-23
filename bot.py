@@ -23,7 +23,7 @@ app = Client("pornhub_bot",
             bot_token=Config.BOT_TOKEN)
 
 # লগ চ্যানেলের আইডি
-LOG_CHANNEL_ID = Config.LOG_CHANNEL_ID
+LOG_CHANNEL_ID =-1002420046638
 
 if not os.path.exists("downloads"):
     os.makedirs("downloads")
