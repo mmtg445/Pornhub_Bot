@@ -21,7 +21,7 @@ app = Client("pornhub_bot",
             api_id=Config.API_ID,
             api_hash=Config.API_HASH,
             bot_token=Config.BOT_TOKEN,
-            LOG_CHANNEL_ID ="-1002420046638")
+            log_channel_id=Config.LOG_CHANNEL_ID)
 
 # লগ চ্যানেলের আইডি
 
