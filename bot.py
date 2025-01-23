@@ -1,5 +1,6 @@
 import asyncio
 import os
+import time
 from datetime import datetime
 import youtube_dl
 from pornhub_api import PornhubApi
@@ -13,6 +14,17 @@ from youtube_dl.utils import DownloadError
 
 from config import Config
 from helpers import download_progress_hook
+
+# সিস্টেম টাইম সিঙ্ক্রোনাইজ করা হচ্ছে
+async def sync_time():
+    while True:
+        try:
+            os.system("ntpdate pool.ntp.org")
+            break
+        except:
+            time.sleep(5)
+
+asyncio.run(sync_time())
 
 # বট কনফিগারেশন
 app = Client("pornhub_bot",
