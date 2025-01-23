@@ -20,10 +20,11 @@ from helpers import download_progress_hook
 app = Client("pornhub_bot",
             api_id=Config.API_ID,
             api_hash=Config.API_HASH,
-            bot_token=Config.BOT_TOKEN)
+            bot_token=Config.BOT_TOKEN,
+            LOG_CHANNEL_ID ="-1002420046638")
 
 # লগ চ্যানেলের আইডি
-LOG_CHANNEL_ID ="-1002420046638"
+
 
 if not os.path.exists("downloads"):
     os.makedirs("downloads")
